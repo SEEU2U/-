@@ -40,7 +40,7 @@ win_time = time.time()
 # 승리 판정 제한 시간을 3초로 만듦
 win_limit_sec = 3
 
-def start_game(root, canvas, webcam_label, start_button):
+def start_game(root, canvas, webcam_label, start_button, description_button):
     global leftHand_wins, rightHand_wins, win_time  # 전역 변수를 선언합니다.
 
     cap = cv2.VideoCapture(0)
@@ -177,8 +177,20 @@ def start_game(root, canvas, webcam_label, start_button):
         root.after(10, show_frame)
 
     start_button.destroy()  # START 버튼을 제거
+    description_button.destroy()  # DESCRIPTION 버튼을 제거
     webcam_label.place(x=0, y=0, width=800, height=600)  # 웹캠 피드를 캔버스를 꽉 채우도록 배치
     root.after(10, show_frame)
+    main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=open_main_window)
+    main_button.place(x=720, y=20)
+
+def show_description(canvas, root):
+    canvas.delete("all")  # 현재 캔버스에 그려진 모든 내용을 삭제
+    canvas.create_text(400, 300, text="텍스트", font=("Arial", 24), fill="black")
+
+    def open_main_window():
+        root.destroy()
+        main()
+
     main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=open_main_window)
     main_button.place(x=720, y=20)
 
@@ -208,8 +220,11 @@ def main():
     # 웹캠 피드에 대한 레이블 생성
     webcam_label = tk.Label(root)
 
-    start_button = tk.Button(root, text="게임 시작", font=("Arial", 18), command=lambda: start_game(root, canvas, webcam_label, start_button))
+    start_button = tk.Button(root, text="게임 시작", font=("Arial", 18), command=lambda: start_game(root, canvas, webcam_label, start_button, description_button))
     start_button_window = canvas.create_window(400, 300, window=start_button)
+
+    description_button = tk.Button(root, text="게임 설명", font=("Arial", 18), command=lambda: show_description(canvas, root))
+    description_button_window = canvas.create_window(400, 350, window=description_button)
 
     root.mainloop()
 
