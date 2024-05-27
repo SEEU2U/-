@@ -176,39 +176,39 @@ def start_game(root, canvas, webcam_label, start_button):
 
         root.after(10, show_frame)
 
-    start_button.destroy()  # START 버튼을 제거합니다
-    webcam_label.place(x=0, y=0, width=800, height=600)  # 웹캠 피드를 캔버스를 꽉 채우도록 배치합니다
+    start_button.destroy()  # START 버튼을 제거
+    webcam_label.place(x=0, y=0, width=800, height=600)  # 웹캠 피드를 캔버스를 꽉 채우도록 배치
     root.after(10, show_frame)
-    main_button = tk.Button(root, text="MAIN", font=("Arial", 18), command=open_main_window)
+    main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=open_main_window)
     main_button.place(x=720, y=20)
 
 def main():
     root = tk.Tk()
-    root.title("Gesture Game")
+    root.title("RPS Game - Rock Paper Scissors")
     root.geometry("800x600")
 
     # 현재 스크립트의 디렉토리를 기준으로 이미지 경로 설정
     base_path = os.path.dirname(os.path.abspath(__file__))
     image_path = os.path.join(base_path, "image/1z.jpg")
 
-    # Load the background image
+    # 배경 이미지 파일 로드
     background_image = Image.open(image_path)
     background_image = background_image.resize((800, 600), Image.LANCZOS)
     background_photo = ImageTk.PhotoImage(background_image)
 
-    # Create a canvas to display the background image
+    # 배경 이미지를 표시할 캔버스 생성
     canvas = tk.Canvas(root, width=800, height=600)
     canvas.pack(fill="both", expand=True)
     canvas.create_image(0, 0, image=background_photo, anchor="nw")
 
-    # Add label and start button on top of the background image
-    label = tk.Label(root, text="Welcome to the Gesture Game", font=("Arial", 24), bg="lightblue")
+    # 배경 이미지 위에 레이블 및 시작 버튼 추가
+    label = tk.Label(root, text="가위바위보 게임", font=("Arial", 24), bg="lightblue")
     label_window = canvas.create_window(400, 200, window=label)
 
-    # Create a label for webcam feed
+    # 웹캠 피드에 대한 레이블 생성
     webcam_label = tk.Label(root)
 
-    start_button = tk.Button(root, text="Start", font=("Arial", 18), command=lambda: start_game(root, canvas, webcam_label, start_button))
+    start_button = tk.Button(root, text="게임 시작", font=("Arial", 18), command=lambda: start_game(root, canvas, webcam_label, start_button))
     start_button_window = canvas.create_window(400, 300, window=start_button)
 
     root.mainloop()
