@@ -226,6 +226,10 @@ def main():
     description_button = tk.Button(root, text="게임 설명", font=("Arial", 18), command=lambda: show_description(canvas, root))
     description_button_window = canvas.create_window(400, 350, window=description_button)
 
+    # 게임 종료 버튼 추가
+    exit_button = tk.Button(root, text="게임 종료", font=("Arial", 18), command=root.quit)
+    exit_button_window = canvas.create_window(400, 400, window=exit_button)
+
     root.mainloop()
 
 if __name__ == "__main__":
