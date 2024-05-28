@@ -178,20 +178,37 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
 
         root.after(10, show_frame)
 
+    def show_menu_buttons():
+        main_button.place_forget()  # 메인 버튼을 숨김
+        continue_button.place(x=350, y=200, width=100, height=50)
+        main_menu_button.place(x=350, y=270, width=100, height=50)
+        exit_game_button.place(x=350, y=340, width=100, height=50)
+
+    def hide_menu_buttons():
+        continue_button.place_forget()
+        main_menu_button.place_forget()
+        exit_game_button.place_forget()
+        main_button.place(x=720, y=20)
+
     start_button.destroy()  # START 버튼을 제거
     description_button.destroy()  # DESCRIPTION 버튼을 제거
     exit_button.destroy()  # EXIT 버튼을 제거
     webcam_label.place(x=0, y=0, width=800, height=600)  # 웹캠 피드를 캔버스를 꽉 채우도록 배치
     root.after(10, show_frame)
-    main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=open_main_window)
+
+    main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=show_menu_buttons)
     main_button.place(x=720, y=20)
+
+    continue_button = tk.Button(root, text="계속", font=("Arial", 18), command=hide_menu_buttons)
+    main_menu_button = tk.Button(root, text="메인으로", font=("Arial", 18), command=open_main_window)
+    exit_game_button = tk.Button(root, text="게임 종료", font=("Arial", 18), command=root.quit)
 
 def show_description(canvas, root):
     canvas.delete("all")  # 현재 캔버스에 그려진 모든 내용을 삭제
 
     # 배경 이미지 파일 로드
     base_path = os.path.dirname(os.path.abspath(__file__))
-    image_path = os.path.join(base_path, "image/background.jpg")
+    image_path = os.path.join(base_path, "image/background_EX.jpg")
     background_image = Image.open(image_path)
     background_image = background_image.resize((800, 600), Image.LANCZOS)
     background_photo = ImageTk.PhotoImage(background_image)
