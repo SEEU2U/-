@@ -34,6 +34,7 @@ import time
 - 'os' : 파일 경로를 다루기 위해 사용함.
 - 'time' : 시간 측정을 위해 사용함.
 
+## 설정 및 초기화
 max_num_hands = 2
 gesture = {
     0: 'fist', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
