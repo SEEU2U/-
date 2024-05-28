@@ -44,12 +44,12 @@ win_limit_sec = 3
 time_remaining = win_limit_sec
 
 def start_game(root, canvas, webcam_label, start_button, description_button, exit_button):
-    global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언합니다.
+    global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언
 
     cap = cv2.VideoCapture(0)
 
     def open_main_window():
-        global leftHand_wins, rightHand_wins  # 전역 변수를 선언합니다.
+        global leftHand_wins, rightHand_wins  # 전역 변수를 선언
         leftHand_wins = 0  # 왼쪽 손 승리 횟수 초기화
         rightHand_wins = 0  # 오른쪽 손 승리 횟수 초기화
         cap.release()
@@ -57,7 +57,7 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
         main()
 
     def show_frame():
-        global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언합니다.
+        global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언
         ret, img = cap.read()
         if not ret:
             return
