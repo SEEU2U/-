@@ -41,9 +41,10 @@ win_time = time.time()
 
 # 승리 판정 제한 시간을 3초로 만듦
 win_limit_sec = 3
+time_remaining = win_limit_sec
 
 def start_game(root, canvas, webcam_label, start_button, description_button, exit_button):
-    global leftHand_wins, rightHand_wins, win_time  # 전역 변수를 선언합니다.
+    global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언합니다.
 
     cap = cv2.VideoCapture(0)
 
@@ -56,7 +57,7 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
         main()
 
     def show_frame():
-        global leftHand_wins, rightHand_wins, win_time  # 전역 변수를 선언합니다.
+        global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언합니다.
         ret, img = cap.read()
         if not ret:
             return
@@ -128,7 +129,8 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
 
                     if winner is not None:
                         current_time = time.time()
-                        if current_time - win_time >= win_limit_sec:
+                        time_elapsed = current_time - win_time
+                        if time_elapsed >= win_limit_sec:
                             cv2.putText(img, text='Winner', org=(img.shape[1] // 2 - 100, img.shape[0] // 2),
                                         fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
 
@@ -162,6 +164,11 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
                                     webcam_label.after(5000, open_main_window)
                                     return
                             win_time = current_time
+                            time_remaining = win_limit_sec  # 타이머 초기화
+                        else:
+                            time_remaining = max(0, win_limit_sec - int(time_elapsed))
+                            cv2.putText(img, text=f'Time :  {time_remaining}', org=(img.shape[1] // 2 - 100, 50),
+                                        fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255, 0, 0), thickness=2)
 
                     # 왼쪽 손의 이긴 횟수를 표시
                     cv2.putText(img, text=str(leftHand_wins), org=(50, img.shape[0] - 50), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
