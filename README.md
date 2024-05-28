@@ -16,7 +16,6 @@
 
 ## 간단한 코드 설명
 ### 가져오기 및 초기설정
-```bash
 import tkinter as tk
 from tkinter import messagebox
 from PIl import Image, ImageTk
