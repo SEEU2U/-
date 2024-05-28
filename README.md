@@ -117,13 +117,13 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
     main_menu_button = tk.Button(root, text="메인으로", font=("Arial", 18), command=open_main_window)
     exit_game_button = tk.Button(root, text="게임 종료", font=("Arial", 18), command=root.quit)
 ```
-- show_menu_buttons : 메뉴 버튼을 표시합니다.
-- hide_menu_buttons : 메뉴 버튼을 숨깁니다.
-- 웹 캠 레이블 : 웹 캠 피드를 표시할 레이블을 설정합니다.
-- main_button : 메뉴 버튼을 생성합니다.
-- continue_button : 계속 버튼을 생성합니다.
-- main_menu_button : 메인 메뉴 버튼을 생성합니다.
-- exit_game_button : 게임 종료 버튼을 생성합니다.
+- show_menu_buttons : 메뉴 버튼을 표시함.
+- hide_menu_buttons : 메뉴 버튼을 숨김.
+- 웹 캠 레이블 : 웹 캠 피드를 표시할 레이블을 설정함.
+- main_button : 메뉴 버튼을 생성함.
+- continue_button : 계속 버튼을 생성함.
+- main_menu_button : 메인 메뉴 버튼을 생성함.
+- exit_game_button : 게임 종료 버튼을 생성함.
   
 ## 프레임 기능 표시
 ```bash
