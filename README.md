@@ -45,7 +45,7 @@ rps_gesture = {0: 'rock', 5: 'paper', 9: 'scissors'}
 - 'gesture' : 손 제스처의 레이블임.
 - 'rps_gesture' : 가위바위보 게임에 사용되는 제스처임.
 
-# MediaPipe 설정
+## MediaPipe 설정
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 
