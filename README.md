@@ -92,10 +92,10 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
     global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언
 
     cap = cv2.VideoCapture(0)
-
+```
 - 'start_game' 함수는 게임을 시작함.
 - 'cap'은 웹 캠을 열어 영상을 캡처함.
-```
+
 ## 프레임 기능 표시
 ```bash
     def show_frame():
