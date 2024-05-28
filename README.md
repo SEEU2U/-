@@ -98,7 +98,33 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
 
 ## 게임 UI 및 로직
 ```bash
+    def hide_menu_buttons():
+        continue_button.place_forget()
+        main_menu_button.place_forget()
+        exit_game_button.place_forget()
+        main_button.place(x=720, y=20)
 
+    start_button.destroy()  # START 버튼을 제거
+    description_button.destroy()  # DESCRIPTION 버튼을 제거
+    exit_button.destroy()  # EXIT 버튼을 제거
+    webcam_label.place(x=0, y=0, width=800, height=600)  # 웹캠 피드를 캔버스를 꽉 채우도록 배치
+    root.after(10, show_frame)
+
+    main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=show_menu_buttons)
+    main_button.place(x=720, y=20)
+
+    continue_button = tk.Button(root, text="계속", font=("Arial", 18), command=hide_menu_buttons)
+    main_menu_button = tk.Button(root, text="메인으로", font=("Arial", 18), command=open_main_window)
+    exit_game_button = tk.Button(root, text="게임 종료", font=("Arial", 18), command=root.quit)
+```
+- show_menu_buttons : 메뉴 버튼을 표시합니다.
+- hide_menu_buttons : 메뉴 버튼을 숨깁니다.
+- 웹 캠 레이블 : 웹 캠 피드를 표시할 레이블을 설정합니다.
+- main_button : 메뉴 버튼을 생성합니다.
+- continue_button : 계속 버튼을 생성합니다.
+- main_menu_button : 메인 메뉴 버튼을 생성합니다.
+- exit_game_button : 게임 종료 버튼을 생성합니다.
+  
 ## 프레임 기능 표시
 ```bash
     def show_frame():
