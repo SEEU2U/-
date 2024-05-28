@@ -200,17 +200,6 @@ def show_description(canvas, root):
     canvas.create_image(0, 0, image=background_photo, anchor="nw")
     canvas.image = background_photo  # 이미지 객체를 참조로 저장하여 가비지 컬렉션 방지
 
-    # 설명 텍스트 설정
-    description_text = (
-        "- 게임 설명 -\n\n"
-        "이 게임은 손 동작을 인식하는 가위바위보 게임입니다.\n"
-        "웹캠을 통해 손 제스처를 인식하여 가위바위보를 합니다.\n"
-        "먼저 5번 이기는 사람이 승리합니다."
-    )
-
-    # 설명 텍스트를 굵게 설정하고 여러 줄로 출력
-    canvas.create_text(400, 300, text=description_text, font=("Arial", 16, "bold"), fill="black", anchor="center")
-
     def open_main_window():
         root.destroy()
         main()
