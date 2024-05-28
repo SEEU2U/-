@@ -24,7 +24,9 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5)
 
 # 제스쳐 인식 모델
-file = np.genfromtxt('data/gesture_train.csv', delimiter=',')
+base_path = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(base_path, 'data/gesture_train.csv')
+file = np.genfromtxt(file_path, delimiter=',')
 angle = file[:, :-1].astype(np.float32)
 label = file[:, -1].astype(np.float32)
 knn = cv2.ml.KNearest_create()
@@ -39,19 +41,23 @@ win_time = time.time()
 
 # 승리 판정 제한 시간을 3초로 만듦
 win_limit_sec = 3
+time_remaining = win_limit_sec
 
-def start_game(root, canvas, webcam_label, start_button):
-    global leftHand_wins, rightHand_wins, win_time  # 전역 변수를 선언합니다.
+def start_game(root, canvas, webcam_label, start_button, description_button, exit_button):
+    global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언합니다.
 
     cap = cv2.VideoCapture(0)
 
     def open_main_window():
+        global leftHand_wins, rightHand_wins  # 전역 변수를 선언합니다.
+        leftHand_wins = 0  # 왼쪽 손 승리 횟수 초기화
+        rightHand_wins = 0  # 오른쪽 손 승리 횟수 초기화
         cap.release()
         root.destroy()
         main()
 
     def show_frame():
-        global leftHand_wins, rightHand_wins, win_time  # 전역 변수를 선언합니다.
+        global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언합니다.
         ret, img = cap.read()
         if not ret:
             return
@@ -123,17 +129,18 @@ def start_game(root, canvas, webcam_label, start_button):
 
                     if winner is not None:
                         current_time = time.time()
-                        if current_time - win_time >= win_limit_sec:
-                            cv2.putText(img, text='Winner', org=(rps_result[winner]['org'][0], rps_result[winner]['org'][1] + 70),
+                        time_elapsed = current_time - win_time
+                        if time_elapsed >= win_limit_sec:
+                            cv2.putText(img, text='Winner', org=(img.shape[1] // 2 - 100, img.shape[0] // 2),
                                         fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
 
                             # 승리 제한 시간 이후 승리한 경우에 이긴 횟수 증가
                             if rps_result[winner]['org'][0] < img.shape[1] // 2:
                                 leftHand_wins += 1
                                 if leftHand_wins == 5:
-                                    cv2.putText(img, text='Finish', org=(int(img.shape[1] / 2), 50),
+                                    cv2.putText(img, text='Finish', org=(img.shape[1] // 2 - 100, img.shape[0] // 2 - 50),
                                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=3)
-                                    cv2.putText(img, text='Winner Left', org=(int(img.shape[1] / 2), 100),
+                                    cv2.putText(img, text='Winner Left', org=(img.shape[1] // 2 - 100, img.shape[0] // 2 + 50),
                                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
                                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                                     img = Image.fromarray(img)
@@ -145,9 +152,9 @@ def start_game(root, canvas, webcam_label, start_button):
                             else:
                                 rightHand_wins += 1
                                 if rightHand_wins == 5:
-                                    cv2.putText(img, text='Finish', org=(int(img.shape[1] / 2), 50),
+                                    cv2.putText(img, text='Finish', org=(img.shape[1] // 2 - 100, img.shape[0] // 2 - 50),
                                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=3)
-                                    cv2.putText(img, text='Winner Right', org=(int(img.shape[1] / 2), 100),
+                                    cv2.putText(img, text='Winner Right', org=(img.shape[1] // 2 - 100, img.shape[0] // 2 + 50),
                                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
                                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                                     img = Image.fromarray(img)
@@ -157,6 +164,11 @@ def start_game(root, canvas, webcam_label, start_button):
                                     webcam_label.after(5000, open_main_window)
                                     return
                             win_time = current_time
+                            time_remaining = win_limit_sec  # 타이머 초기화
+                        else:
+                            time_remaining = max(0, win_limit_sec - int(time_elapsed))
+                            cv2.putText(img, text=f'Time :  {time_remaining}', org=(img.shape[1] // 2 - 100, 50),
+                                        fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(255, 0, 0), thickness=2)
 
                     # 왼쪽 손의 이긴 횟수를 표시
                     cv2.putText(img, text=str(leftHand_wins), org=(50, img.shape[0] - 50), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
@@ -165,7 +177,7 @@ def start_game(root, canvas, webcam_label, start_button):
                     cv2.putText(img, text=str(rightHand_wins), org=(img.shape[1] - 100, img.shape[0] - 50),
                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 255), thickness=3)
 
-                    cv2.putText(img, text=text, org=(int(img.shape[1] / 2), 100), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                    cv2.putText(img, text=text, org=(img.shape[1] // 2 - 100, img.shape[0] // 2), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale=2, color=(0, 0, 255), thickness=3)
 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -176,40 +188,83 @@ def start_game(root, canvas, webcam_label, start_button):
 
         root.after(10, show_frame)
 
-    start_button.destroy()  # START 버튼을 제거합니다
-    webcam_label.place(x=0, y=0, width=800, height=600)  # 웹캠 피드를 캔버스를 꽉 채우도록 배치합니다
+    def show_menu_buttons():
+        main_button.place_forget()  # 메인 버튼을 숨김
+        continue_button.place(x=350, y=200, width=100, height=50)
+        main_menu_button.place(x=350, y=270, width=100, height=50)
+        exit_game_button.place(x=350, y=340, width=100, height=50)
+
+    def hide_menu_buttons():
+        continue_button.place_forget()
+        main_menu_button.place_forget()
+        exit_game_button.place_forget()
+        main_button.place(x=720, y=20)
+
+    start_button.destroy()  # START 버튼을 제거
+    description_button.destroy()  # DESCRIPTION 버튼을 제거
+    exit_button.destroy()  # EXIT 버튼을 제거
+    webcam_label.place(x=0, y=0, width=800, height=600)  # 웹캠 피드를 캔버스를 꽉 채우도록 배치
     root.after(10, show_frame)
-    main_button = tk.Button(root, text="MAIN", font=("Arial", 18), command=open_main_window)
+
+    main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=show_menu_buttons)
     main_button.place(x=720, y=20)
 
-def main():
-    root = tk.Tk()
-    root.title("Gesture Game")
-    root.geometry("800x600")
+    continue_button = tk.Button(root, text="계속", font=("Arial", 18), command=hide_menu_buttons)
+    main_menu_button = tk.Button(root, text="메인으로", font=("Arial", 18), command=open_main_window)
+    exit_game_button = tk.Button(root, text="게임 종료", font=("Arial", 18), command=root.quit)
 
-    # 현재 스크립트의 디렉토리를 기준으로 이미지 경로 설정
+def show_description(canvas, root):
+    canvas.delete("all")  # 현재 캔버스에 그려진 모든 내용을 삭제
+
+    # 배경 이미지 파일 로드
     base_path = os.path.dirname(os.path.abspath(__file__))
-    image_path = os.path.join(base_path, "image/1z.jpg")
-
-    # Load the background image
+    image_path = os.path.join(base_path, "image/background_EX.jpg")
     background_image = Image.open(image_path)
     background_image = background_image.resize((800, 600), Image.LANCZOS)
     background_photo = ImageTk.PhotoImage(background_image)
 
-    # Create a canvas to display the background image
+    # 배경 이미지를 표시
+    canvas.create_image(0, 0, image=background_photo, anchor="nw")
+    canvas.image = background_photo  # 이미지 객체를 참조로 저장하여 가비지 컬렉션 방지
+
+    def open_main_window():
+        root.destroy()
+        main()
+
+    main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=open_main_window)
+    main_button.place(x=720, y=20)
+
+def main():
+    root = tk.Tk()
+    root.title("RPS Game - Rock Paper Scissors")
+    root.geometry("800x600")
+
+    # 현재 스크립트의 디렉토리를 기준으로 이미지 경로 설정
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(base_path, "image/MAIN.jpg")
+
+    # 배경 이미지 파일 로드
+    background_image = Image.open(image_path)
+    background_image = background_image.resize((800, 600), Image.LANCZOS)
+    background_photo = ImageTk.PhotoImage(background_image)
+
+    # 배경 이미지를 표시할 캔버스 생성
     canvas = tk.Canvas(root, width=800, height=600)
     canvas.pack(fill="both", expand=True)
     canvas.create_image(0, 0, image=background_photo, anchor="nw")
 
-    # Add label and start button on top of the background image
-    label = tk.Label(root, text="Welcome to the Gesture Game", font=("Arial", 24), bg="lightblue")
-    label_window = canvas.create_window(400, 200, window=label)
-
-    # Create a label for webcam feed
+    # 웹캠 피드에 대한 레이블 생성
     webcam_label = tk.Label(root)
 
-    start_button = tk.Button(root, text="Start", font=("Arial", 18), command=lambda: start_game(root, canvas, webcam_label, start_button))
+    start_button = tk.Button(root, text="게임 시작", font=("Arial", 18), command=lambda: start_game(root, canvas, webcam_label, start_button, description_button, exit_button))
     start_button_window = canvas.create_window(400, 300, window=start_button)
+
+    description_button = tk.Button(root, text="게임 설명", font=("Arial", 18), command=lambda: show_description(canvas, root))
+    description_button_window = canvas.create_window(400, 370, window=description_button)
+
+    # 게임 종료 버튼 추가
+    exit_button = tk.Button(root, text="게임 종료", font=("Arial", 18), command=root.quit)
+    exit_button_window = canvas.create_window(400, 440, window=exit_button)
 
     root.mainloop()
 
