@@ -162,6 +162,7 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
 
 - 두 손의 제스처를 비교하여 승자를 결정함.
 - 결과에 따라 텍스트를 설정함.
+```bash
 
 ![weeeeeeeeeeee](https://github.com/SEEU2U/RPS-Machine/assets/162940944/53c55af5-0986-43ed-a393-80b31866083f)
 <두 손의 제스처를 비교하여 승부가 결정되는 장면 >
