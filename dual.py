@@ -189,6 +189,17 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
 def show_description(canvas, root):
     canvas.delete("all")  # 현재 캔버스에 그려진 모든 내용을 삭제
 
+    # 배경 이미지 파일 로드
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(base_path, "image/background.jpg")
+    background_image = Image.open(image_path)
+    background_image = background_image.resize((800, 600), Image.LANCZOS)
+    background_photo = ImageTk.PhotoImage(background_image)
+
+    # 배경 이미지를 표시
+    canvas.create_image(0, 0, image=background_photo, anchor="nw")
+    canvas.image = background_photo  # 이미지 객체를 참조로 저장하여 가비지 컬렉션 방지
+
     # 설명 텍스트 설정
     description_text = (
         "- 게임 설명 -\n\n"
@@ -205,7 +216,7 @@ def show_description(canvas, root):
         main()
 
     main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=open_main_window)
-    main_button.place(x=720, y=20)  
+    main_button.place(x=720, y=20)
 
 def main():
     root = tk.Tk()
@@ -243,4 +254,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
