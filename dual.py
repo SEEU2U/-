@@ -14,7 +14,7 @@ gesture = {
 }
 rps_gesture = {0: 'rock', 5: 'paper', 9: 'scissors'}
 
-# MediaPipe 손 모델
+# MediaPipe 손 모델 초기화
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 
@@ -23,7 +23,7 @@ hands = mp_hands.Hands(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5)
 
-# 제스쳐 인식 모델
+# 제스쳐 인식 모델 초기화
 base_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(base_path, 'data/gesture_train.csv')
 file = np.genfromtxt(file_path, delimiter=',')
@@ -39,15 +39,17 @@ rightHand_wins = 0
 # 이전에 승리한 시간을 기록
 win_time = time.time()
 
-# 승리 판정 제한 시간을 3초로 만듦
+# 승리 판정 제한 시간을 3초로 설정
 win_limit_sec = 3
 time_remaining = win_limit_sec
 
+# 게임을 시작하는 함수
 def start_game(root, canvas, webcam_label, start_button, description_button, exit_button):
     global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언
 
     cap = cv2.VideoCapture(0)
 
+    # 메인 윈도우를 여는 함수
     def open_main_window():
         global leftHand_wins, rightHand_wins  # 전역 변수를 선언
         leftHand_wins = 0  # 왼쪽 손 승리 횟수 초기화
@@ -56,6 +58,7 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
         root.destroy()
         main()
 
+    # 웹캠에서 프레임을 읽어오는 함수
     def show_frame():
         global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언
         ret, img = cap.read()
@@ -188,12 +191,14 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
 
         root.after(10, show_frame)
 
+    # 메뉴 버튼을 표시하는 함수
     def show_menu_buttons():
         main_button.place_forget()  # 메인 버튼을 숨김
         continue_button.place(x=350, y=200, width=100, height=50)
         main_menu_button.place(x=350, y=270, width=100, height=50)
         exit_game_button.place(x=350, y=340, width=100, height=50)
 
+    # 메뉴 버튼을 숨기는 함수
     def hide_menu_buttons():
         continue_button.place_forget()
         main_menu_button.place_forget()
@@ -213,6 +218,7 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
     main_menu_button = tk.Button(root, text="메인으로", font=("Arial", 18), command=open_main_window)
     exit_game_button = tk.Button(root, text="게임 종료", font=("Arial", 18), command=root.quit)
 
+# 게임 설명 화면을 표시하는 함수
 def show_description(canvas, root):
     canvas.delete("all")  # 현재 캔버스에 그려진 모든 내용을 삭제
 
@@ -227,6 +233,7 @@ def show_description(canvas, root):
     canvas.create_image(0, 0, image=background_photo, anchor="nw")
     canvas.image = background_photo  # 이미지 객체를 참조로 저장하여 가비지 컬렉션 방지
 
+    # 메인 윈도우를 여는 함수
     def open_main_window():
         root.destroy()
         main()
@@ -234,6 +241,7 @@ def show_description(canvas, root):
     main_button = tk.Button(root, text="메뉴", font=("Arial", 18), command=open_main_window)
     main_button.place(x=720, y=20)
 
+# 메인 함수: 애플리케이션의 메인 윈도우를 설정하고 실행
 def main():
     root = tk.Tk()
     root.title("RPS Game - Rock Paper Scissors")
