@@ -48,6 +48,9 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
     cap = cv2.VideoCapture(0)
 
     def open_main_window():
+        global leftHand_wins, rightHand_wins  # 전역 변수를 선언합니다.
+        leftHand_wins = 0  # 왼쪽 손 승리 횟수 초기화
+        rightHand_wins = 0  # 오른쪽 손 승리 횟수 초기화
         cap.release()
         root.destroy()
         main()
@@ -126,16 +129,16 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
                     if winner is not None:
                         current_time = time.time()
                         if current_time - win_time >= win_limit_sec:
-                            cv2.putText(img, text='Winner', org=(rps_result[winner]['org'][0], rps_result[winner]['org'][1] + 70),
+                            cv2.putText(img, text='Winner', org=(img.shape[1] // 2 - 100, img.shape[0] // 2),
                                         fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
 
                             # 승리 제한 시간 이후 승리한 경우에 이긴 횟수 증가
                             if rps_result[winner]['org'][0] < img.shape[1] // 2:
                                 leftHand_wins += 1
                                 if leftHand_wins == 5:
-                                    cv2.putText(img, text='Finish', org=(int(img.shape[1] / 2), 50),
+                                    cv2.putText(img, text='Finish', org=(img.shape[1] // 2 - 100, img.shape[0] // 2 - 50),
                                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=3)
-                                    cv2.putText(img, text='Winner Left', org=(int(img.shape[1] / 2), 100),
+                                    cv2.putText(img, text='Winner Left', org=(img.shape[1] // 2 - 100, img.shape[0] // 2 + 50),
                                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
                                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                                     img = Image.fromarray(img)
@@ -147,9 +150,9 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
                             else:
                                 rightHand_wins += 1
                                 if rightHand_wins == 5:
-                                    cv2.putText(img, text='Finish', org=(int(img.shape[1] / 2), 50),
+                                    cv2.putText(img, text='Finish', org=(img.shape[1] // 2 - 100, img.shape[0] // 2 - 50),
                                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 0, 255), thickness=3)
-                                    cv2.putText(img, text='Winner Right', org=(int(img.shape[1] / 2), 100),
+                                    cv2.putText(img, text='Winner Right', org=(img.shape[1] // 2 - 100, img.shape[0] // 2 + 50),
                                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 0), thickness=3)
                                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                                     img = Image.fromarray(img)
@@ -167,7 +170,7 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
                     cv2.putText(img, text=str(rightHand_wins), org=(img.shape[1] - 100, img.shape[0] - 50),
                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=2, color=(0, 255, 255), thickness=3)
 
-                    cv2.putText(img, text=text, org=(int(img.shape[1] / 2), 100), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                    cv2.putText(img, text=text, org=(img.shape[1] // 2 - 100, img.shape[0] // 2), fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale=2, color=(0, 0, 255), thickness=3)
 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -246,14 +249,14 @@ def main():
     # 웹캠 피드에 대한 레이블 생성
     webcam_label = tk.Label(root)
 
-    start_button = tk.Button(root, text="게임 시작", font=("맑은 고딕", 18), command=lambda: start_game(root, canvas, webcam_label, start_button, description_button, exit_button))
+    start_button = tk.Button(root, text="게임 시작", font=("Arial", 18), command=lambda: start_game(root, canvas, webcam_label, start_button, description_button, exit_button))
     start_button_window = canvas.create_window(400, 300, window=start_button)
 
-    description_button = tk.Button(root, text="게임 설명", font=("맑은 고딕", 18), command=lambda: show_description(canvas, root))
+    description_button = tk.Button(root, text="게임 설명", font=("Arial", 18), command=lambda: show_description(canvas, root))
     description_button_window = canvas.create_window(400, 370, window=description_button)
 
     # 게임 종료 버튼 추가
-    exit_button = tk.Button(root, text="게임 종료", font=("맑은 고딕", 18), command=root.quit)
+    exit_button = tk.Button(root, text="게임 종료", font=("Arial", 18), command=root.quit)
     exit_button_window = canvas.create_window(400, 440, window=exit_button)
 
     root.mainloop()
