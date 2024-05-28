@@ -89,7 +89,7 @@ time_remaining = win_limit_sec
 ## 메인 게임 기능
 ```bash
 def start_game(root, canvas, webcam_label, start_button, description_button, exit_button):
-    global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언합니다.
+    global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언
 
     cap = cv2.VideoCapture(0)
 
@@ -99,7 +99,7 @@ def start_game(root, canvas, webcam_label, start_button, description_button, exi
 ## 프레임 기능 표시
 ```bash
     def show_frame():
-        global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언합니다.
+        global leftHand_wins, rightHand_wins, win_time, time_remaining  # 전역 변수를 선언
         ret, img = cap.read()
         if not ret:
             return
